@@ -8,7 +8,7 @@
     # Yet Another Dotfile Repo v1.1
     # Now with Prezto and Vundle!
 
-    sh -c "`curl -fsSL https://raw.github.com/albertohm/dotfiles/master/install.sh`"
+    sh -c "`curl -fsSL https://raw.github.com/groteck/dotfiles/master/install.sh`"
 
 **Always be sure to run `rake update` after pulling to ensure plugins are updated**
 
@@ -16,6 +16,7 @@
 
 **YADR is an opinionated dotfile repo that will make your heart sing**
 
+  * I use ubuntu, OSX configurations may be slightly different. 
   * YADR takes a curated set of the best of the best in plugins, dotfile repos and ties them all together into a cohesive system.
   * More than 90 vim plugins, all under one roof, working together.
   * Each plugin is researched and configured to be at its best and to work with other plugins. Often times, better keymaps are provided. See `.yadr/vim/settings` and `.yadr/zsh/`for some examples.
@@ -38,13 +39,13 @@ Please use GitHub Issues for pull requests or bug reports only.
 To get started please run:
 
 ```bash
-sh -c "`curl -fsSL https://raw.github.com/albertohm/dotfiles/master/install.sh`"
+sh -c "`curl -fsSL https://raw.github.com/groteck/dotfiles/master/install.sh`"
 ```
 
 **Note:** YADR will automatically install all of its subcomponents. If you want to be asked
 about each one, use:
 ```bash
-sh -c "`curl -fsSL https://raw.github.com/albertohm/dotfiles/master/install.sh`" -s ask
+sh -c "`curl -fsSL https://raw.github.com/groteck/dotfiles/master/install.sh`" -s ask
 ```
 
 * Install iTerm Solarized Colors - YADR will install Solarized colorschemes into your iTerm. Go to Profiles => Colors => Load Presets to pick Solarized Dark.
@@ -128,11 +129,6 @@ A .gemrc is included. Never again type `gem install whatever --no-ri --no-rdoc`.
 `tmux.conf` provides some sane defaults for tmux on Mac OS like a powerful status bar and vim keybindings.
 You can customize the configuration in `~/.tmux.conf.user`.
 
-### Vimization of everything
-
-The provided inputrc and editrc will turn your various command line tools like mysql and irb into vim prompts. There's
-also an included Ctrl-R reverse history search feature in editrc, very useful in irb, postgres command line, and etc.
-
 ### Github Issues: [ghi gem](https://github.com/stephencelis/ghi)
 
 We include the `ghi` command. Try `ghi list` and have fun managing issues from command line!
@@ -190,27 +186,8 @@ of plugins above to learn more.
  * `gK` - Opens the documentation for the word under the cursor.
 
 #### File Navigation
- * `,t` - CtrlP fuzzy file selector
- * `,b` - CtrlP buffer selector
- * `Cmd-Shift-M` - jump to method - CtrlP tag search within current buffer
- * `,jm` jump (via CtrlP) to app/models
- * `,jc` app/controllers
- * `,jv` app/views
- * `,jh` app/helpers
- * `,jl` lib
- * `,jp` public
- * `,js` spec
- * `,jf` fast_spec
- * `,jt` test
- * `,jd` db
- * `,jC` config
- * `,jV` vendor
- * `,jF` factories
- * `Cmd-Shift-P` - Clear CtrlP cache
- * `:Bopen [gem name]` to navigate to a gem (@tpope/vim-bundler)
- * `Cmd-Shift-N` - NERDTree toggle
- * `Ctrl-\` - Show current file in NERDTree
- * `-` open the nerdtree in the current split, rather than popping out a project drawer (uses vim-vingar)
+ * `Alt-Enter` - Call file finder
+ * You can search and grep into the filefinder with `filePattern grep:grepPattern`
 
 #### Better keystrokes for common editing commands
 

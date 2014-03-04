@@ -34,6 +34,7 @@ Bundle "ck3g/vim-change-hash-syntax"
 Bundle "briancollins/vim-jst"
 Bundle "pangloss/vim-javascript"
 Bundle "rodjek/vim-puppet"
+Bundle "git@github.com:guns/vim-clojure-static.git"
 Bundle "othree/javascript-libraries-syntax.vim"
 
 " Html, Xml, Css, Markdown...
@@ -69,16 +70,17 @@ Bundle "vim-scripts/camelcasemotion.git"
 Bundle "vim-scripts/matchit.zip.git"
 Bundle "terryma/vim-multiple-cursors"
 
+" extrat part of files with diferent sintax
+Bundle 'git@github.com:vim-scripts/SyntaxRange.git'
+
 
 " Tabbable snippets
 Bundle "garbas/vim-snipmate.git"
 Bundle "honza/vim-snippets"
 
 "File Navigation / Project Management
-Bundle "jistr/vim-nerdtree-tabs.git"
-Bundle "scrooloose/nerdtree.git"
-Bundle "kien/ctrlp.vim"
 Bundle "tpope/vim-vinegar"
+Bundle "git@github.com:ayosec/vim-file-finder.git"
 
 "Search
 Bundle "rking/ag.vim"
@@ -139,6 +141,7 @@ Bundle "vim-scripts/TagHighlight.git"
 Bundle "bogado/file-line.git"
 Bundle "jby/tmux.vim.git"
 Bundle "morhetz/gruvbox"
+Bundle "git@github.com:kien/rainbow_parentheses.vim.git"
 
 
 
