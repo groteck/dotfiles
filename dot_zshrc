@@ -103,3 +103,11 @@ alias vzsh="nvim ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias vim="nvim"
 source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/jlopez/.google-cloud-sdk/path.zsh.inc' ]; then . '/Users/jlopez/.google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/jlopez/.google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/jlopez/.google-cloud-sdk/completion.zsh.inc'; fi
+
+export PATH="/Users/jlopez/.local/bin:$PATH"
