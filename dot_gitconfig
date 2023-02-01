@@ -1,7 +1,6 @@
-[user]
-	name = Fraire-Lopez, Juan-Gabriel
-	email = juan.lopez@solactive.com
 [push]
 	autoSetupRemote = true
 [core]
 	excludesfile = /Users/jlopez/.gitignore
+[init]
+	defaultBranch = main
