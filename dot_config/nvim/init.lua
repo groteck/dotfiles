@@ -60,52 +60,6 @@ vim.opt.nu = true
 vim.opt.relativenumber = true
 
 
--- Colors
-vim.t_Co = 256
-vim.opt.syntax = 'enable'
-vim.opt.background = 'dark'
-vim.opt.colorcolumn = '80'
-vim.opt.hlsearch = true
-vim.cmd.colorscheme "catppuccin-mocha"
-vim.opt.termguicolors = true -- set termguicolors to enable highlight groups
-
-
-require("catppuccin").setup({
-    integrations = {
-        -- For plugins integrations (https://github.com/catppuccin/nvim#integrations)
-        cmp = true,
-        gitsigns = true,
-        nvimtree = true,
-        telescope = true,
-        notify = true,
-        treesitter = true,
-        treesitter_context = true,
-        ts_rainbow = true,
-        overseer = true,
-        illuminate = true,
-        neotest = true,
-        native_lsp = {
-            enabled = true,
-            virtual_text = {
-                errors = { "italic" },
-                hints = { "italic" },
-                warnings = { "italic" },
-                information = { "italic" },
-            },
-            underlines = {
-                errors = { "underline" },
-                hints = { "underline" },
-                warnings = { "underline" },
-                information = { "underline" },
-            },
-        },
-        indent_blankline = {
-            enabled = true,
-            colored_indent_levels = true,
-        },
-
-    },
-})
 
 -- Visual remaps
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -115,8 +69,12 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 -- LSP config
 
-
+local cfg = {
+    toggle_key = '<A-x>', -- toggle signature on and off in insert mode,  e.g. toggle_key = '<M-x>'
+}
+require 'lsp_signature'.setup(cfg) -- no need to specify bufnr if you don't use toggle_key
 local lsp = require('lsp-zero')
+local lspconfig = require('lspconfig')
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
@@ -152,39 +110,52 @@ lsp.configure('pylsp', {
     }
 })
 
+require('neodev').setup()
+
+-- Enable neodev
+lspconfig.sumneko_lua.setup({
+    settings = {
+        Lua = {
+            completion = {
+                callSnippet = "Replace"
+            }
+        }
+    }
+})
+
 vim.keymap.set('n', ',j', vim.diagnostic.goto_next, { noremap = true })
 vim.keymap.set('n', ',k', vim.diagnostic.goto_prev, { noremap = true })
 vim.keymap.set('n', ',d', vim.lsp.buf.code_action, { noremap = true })
 vim.keymap.set('n', ',,', vim.lsp.buf.signature_help, { noremap = true })
 
 -- Add extra sources
+local lspkind = require('lspkind')
 local cmp_sources = lsp.defaults.cmp_sources()
+require('crates').setup()
+
 table.insert(cmp_sources, { name = 'crates' })
 
 lsp.setup_nvim_cmp({
     mapping = lsp.defaults.cmp_mappings({
         ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
         ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-        ['<Tab>'] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            elseif require('luasnip').expand_or_jumpable() then
-                vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Plug>luasnip-expand-or-jump', true, true, true), '')
-            elseif vim.b._copilot_suggestion ~= nil then
-                vim.fn.feedkeys(vim.api.nvim_replace_termcodes(vim.fn['copilot#Accept'](), true, true, true), '')
-            else
-                fallback()
-            end
-        end, {
-            'i',
-            's',
-        }),
     }),
+    formatting = {
+        format = lspkind.cmp_format({
+            mode = 'symbol', -- show only symbol annotations
+            maxwidth = 100, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+            ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+
+            -- The function below will be called before any actual modifications from lspkind
+            -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
+            before = function(_, vim_item)
+                return vim_item
+            end
+        })
+    },
     sources = cmp_sources
 })
 
-lsp.setup_nvim_cmp({
-})
 
 lsp.set_preferences({
     set_lsp_keymaps = { omit = { '<C-k>' } }
@@ -214,14 +185,15 @@ require('rust-tools').setup({ server = rust_lsp })
 vim.api.nvim_set_keymap("i", ",/", 'copilot#Accept()', { silent = true, expr = true })
 vim.g.copilot_no_tab_map = true
 vim.g.copilot_assume_mapped = true
--- vim.cmd [[let g:copilot_no_tab_map = v:true]]
--- vim.cmd [[let g:copilot_assume_mapped = v:true]]
 
 -- Status line
 require('lualine').setup {
     options = {
         theme = "catppuccin"
-    }
+    },
+    sections = {
+        lualine_x = { "overseer" },
+    },
 }
 
 -- empty setup using defaults
@@ -229,13 +201,44 @@ require("nvim-tree").setup()
 vim.keymap.set('n', ',dd', '<cmd>NvimTreeToggle<CR>')
 
 -- indent lines
+vim.opt.list = true
+vim.opt.listchars:append "space:⋅"
+vim.opt.listchars:append "eol:↴"
+
 require("indent_blankline").setup {
     -- for example, context is off by default, use this to turn it on
+    space_char_blankline = " ",
     show_current_context = true,
     show_current_context_start = true,
+    char_highlight_list = {
+        "IndentBlanklineIndent1",
+        "IndentBlanklineIndent2",
+        "IndentBlanklineIndent3",
+        "IndentBlanklineIndent4",
+        "IndentBlanklineIndent5",
+        "IndentBlanklineIndent6",
+    },
 }
 
 -- Telescope (Fuzzy finder)
+local telescope = require('telescope')
+-- Select multiple
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
+
+local mm = { -- my mappings
+    ["<CR>"] = function(pb)
+        local picker = action_state.get_current_picker(pb)
+        local multi = picker:get_multi_selection()
+        actions.select_default(pb) -- the normal enter behaviour
+        for _, j in pairs(multi) do
+            if j.path ~= nil then -- is it a file -> open it as well:
+                vim.cmd(string.format("%s %s", "edit", j.path))
+            end
+        end
+    end,
+}
+
 -- Telescope keymaps
 vim.keymap.set('n', ',fl', '<cmd>Telescope current_buffer_fuzzy_find theme=get_ivy layout_config={height=0.5}<CR>')
 vim.keymap.set('n', ',ff', '<cmd>Telescope find_files theme=get_ivy layout_config={height=0.5}<CR>')
@@ -246,7 +249,19 @@ vim.keymap.set('n', ',fv', '<cmd>Telescope git_files theme=get_ivy layout_config
 vim.keymap.set('n', ',fk', '<cmd>Telescope keymaps theme=get_ivy layout_config={height=0.5}<CR>')
 
 -- Telescope config
-require('telescope').load_extension('fzf')
+telescope.load_extension('fzf')
+
+telescope.setup({
+    defaults = {
+        mappings = {
+            i = mm,
+            n = mm,
+        },
+        file_ignore_patterns = { "node_modules", ".git" },
+        color_devicons = true,
+        set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
+    },
+})
 
 -- Undo tree
 vim.keymap.set('n', ',u', '<cmd>UndotreeToggle<CR>')
@@ -260,7 +275,7 @@ let g:surround_{char2nr('M')} = "\1S-Open: \1\r\2S-Close: \2"
 -- Tmux navigation
 -- Keybindings
 --
-require('Navigator').setup()
+require('Navigator').setup({})
 
 vim.keymap.set('n', "<C-h>", '<CMD>NavigatorLeft<CR>')
 vim.keymap.set('n', "<C-l>", '<CMD>NavigatorRight<CR>')
@@ -269,25 +284,30 @@ vim.keymap.set('n', "<C-j>", '<CMD>NavigatorDown<CR>')
 vim.keymap.set('n', "<C-p>", '<CMD>NavigatorPrevious<CR>')
 
 -- Sart screen
-vim.api.nvim_exec([[
-fun! Start()
-    " Don't run if: we have commandline arguments, we don't have an empty
-    " buffer, if we've not invoked as vim or gvim, or if we'e start in insert mode
-    if argc() || line2byte('$') != -1 || v:progname !~? '^[-gmnq]\=vim\=x\=\%[\.exe]$' || &insertmode
-        return
-    endif
-
-    " Open explorer
-    execute ':lua require("telescope.builtin").find_files()'
-endfun
-]], false)
-
-
-local startFun = "g:Start"
-
+-- vim.api.nvim_exec([[
+-- fun! Start()
+--     " Don't run if: we have commandline arguments, we don't have an empty
+--     " buffer, if we've not invoked as vim or gvim, or if we'e start in insert mode
+--     if argc() || line2byte('$') != -1 || v:progname !~? '^[-gmnq]\=vim\=x\=\%[\.exe]$' || &insertmode
+--         return
+--     endif
+--
+--     " Open explorer
+--     execute ':lua require("telescope.builtin").find_files()'
+-- endfun
+-- ]], false)
+-- local startFun = "g:Start"
+--
 vim.api.nvim_create_autocmd({ "VimEnter" }, {
     pattern = { "*" },
-    callback = startFun,
+    callback = function()
+        if vim.fn.argc() == 0 and vim.fn.line2byte(vim.fn.line('$')) == -1
+            and not vim.opt.insertmode:get() then
+
+            require("telescope.builtin").find_files()
+        end
+    end
+    ,
 })
 
 -- Neotest
@@ -356,14 +376,13 @@ null_ls.setup {
     }
 }
 
-require 'mason-null-ls'.setup_handlers() -- If `automatic_setup` is true.
-
 -- TreeSitter
+
 require 'nvim-treesitter.configs'.setup {
     ensure_installed = "all",
     highlight = {
         enable = true,
-        additional_vim_regex_highlighting = true,
+        additional_vim_regex_highlighting = false,
     },
     indent = {
         enable = true,
@@ -385,8 +404,15 @@ require 'nvim-treesitter.configs'.setup {
     auto_install = true,
 }
 
+require 'treesitter-context'.setup {
+    enable = true,
+}
+
 -- Overseer Task runner
 require('overseer').setup()
+
+-- Trouble
+require("trouble").setup()
 
 -- Vim Ilumuminate
 
@@ -399,12 +425,77 @@ require('illuminate').configure({
     },
 })
 
--- Improve active pannel UI
-require("tint").setup()
+-- Git Signs
+require('gitsigns').setup {
+    current_line_blame = true,
+}
+
+-- Colors
+vim.t_Co = 256
+vim.opt.syntax = 'enable'
+vim.opt.colorcolumn = '80'
+vim.opt.hlsearch = true
+vim.cmd.colorscheme "catppuccin-mocha"
+vim.opt.termguicolors = true -- set termguicolors to enable highlight groups
+
+
+-- display hex colors
+require('colorizer').setup()
+
+
+-- Dim inactive window
+-- require('tint').setup({
+--     tint_background_colors = false,
+--     tint = -45, -- Darken colors, use a positive value to brighten
+--     saturation = 0.5, -- Saturation to preserve
+--     highlight_ignore_patterns = { "WinSeparator", 'NormalNC', 'Normal', 'TabLine', 'TabLineFill', 'TabLineSel', },
+-- });
 
 -- Transparent background
+vim.g.transparent_enabled = true
+
 require("transparent").setup({
-    enable = true, -- boolean: enable transparent
-    extra_groups = {}, -- table/string: additional groups that should be cleared
-    exclude = {}, -- table: groups you don't want to clear
+    enable = vim.g.transparent_enabled, -- boolean: enable transparent
+})
+
+--- Catppuccin theme config
+
+require("catppuccin").setup({
+    transparent_background = vim.g.transparent_enabled,
+    show_end_of_buffer = true, -- show the '~' characters after the end of buffers
+    term_colors = true,
+    integrations = {
+        -- For plugins integrations (https://github.com/catppuccin/nvim#integrations)
+        cmp = true,
+        gitsigns = true,
+        nvimtree = true,
+        telescope = true,
+        notify = true,
+        treesitter = true,
+        treesitter_context = true,
+        ts_rainbow = true,
+        overseer = true,
+        illuminate = true,
+        neotest = true,
+        native_lsp = {
+            enabled = true,
+            virtual_text = {
+                errors = { "italic" },
+                hints = { "italic" },
+                warnings = { "italic" },
+                information = { "italic" },
+            },
+            underlines = {
+                errors = { "underline" },
+                hints = { "underline" },
+                warnings = { "underline" },
+                information = { "underline" },
+            },
+        },
+        indent_blankline = {
+            enabled = true,
+            colored_indent_levels = true,
+        },
+
+    },
 })

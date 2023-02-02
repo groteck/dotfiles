@@ -21,11 +21,6 @@ return require('packer').startup(function(use)
     use { -- Context on the top
         'nvim-treesitter/nvim-treesitter-context',
         requires = { 'nvim-treesitter/nvim-treesitter' },
-        config = function()
-            require 'treesitter-context'.setup {
-                enable = true,
-            }
-        end,
     }
 
     -- Fuzzy them all AKA Telescope + :crap:
@@ -70,13 +65,23 @@ return require('packer').startup(function(use)
             { 'saadparwaiz1/cmp_luasnip' },
             { 'hrsh7th/cmp-nvim-lsp' },
             { 'hrsh7th/cmp-nvim-lua' },
+            { 'saecki/crates.nvim' },
             -- Snippets
             { 'L3MON4D3/LuaSnip' },
             { 'rafamadriz/friendly-snippets' },
+            -- Icons
+            { 'onsails/lspkind-nvim' },
+            -- Documentation
+            { 'ray-x/lsp_signature.nvim' },
+            -- Async
+            { 'nvim-lua/plenary.nvim' },
         }
     }
 
     use 'github/copilot.vim'
+
+    -- Lsp lua neovim
+    use "folke/neodev.nvim"
 
     -- Status line
     use {
@@ -120,30 +125,33 @@ return require('packer').startup(function(use)
         }
     }
 
-    use {
-        'saecki/crates.nvim',
-        requires = { { 'nvim-lua/plenary.nvim' } },
-        config = function()
-            require('crates').setup()
-        end,
-    }
-
     -- Linters formatters
     use { "jose-elias-alvarez/null-ls.nvim",
         "jay-babu/mason-null-ls.nvim",
     }
 
     -- Improve UI
-    use { 'levouh/tint.nvim' } -- Active panel highlight
+    -- use { 'levouh/tint.nvim' } -- Dim panels
     use { 'stevearc/dressing.nvim' } -- Generl ui improvements
     use { 'rcarriga/nvim-notify' } -- Notifications
     use { 'RRethy/vim-illuminate' } -- Highlight word under cursor
     use { 'xiyaowong/nvim-transparent' } -- Transparent background
 
+    -- Hex collors
+    use { 'norcalli/nvim-colorizer.lua' }
+
+    -- git
+    use { 'lewis6991/gitsigns.nvim' } -- Git signs
+
     -- Task runner
     use {
         'stevearc/overseer.nvim',
-        config = function() require('overseer').setup() end
+    }
+
+    -- Project management
+    use {
+        "folke/trouble.nvim",
+        requires = "nvim-tree/nvim-web-devicons",
     }
 
 end)
