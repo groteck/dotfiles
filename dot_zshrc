@@ -54,7 +54,7 @@ fi
 
 alias vzsh="chezmoi edit --apply ~/.zshrc"
 alias vtmux="chezmoi edit --apply ~/.tmux.conf"
-alias vv="chezmoi edit --apply ~/.config/nvim/init.vim"
+alias vv="chezmoi edit --apply ~/.config/nvim/init.lua"
 alias vala="chezmoi edit --apply ~/.config/alacritty/alacritty.yml"
 alias vstar="chezmoi edit --apply ~/.config/starship.toml"
 alias czcd="chezmoi cd"

@@ -452,11 +452,11 @@ require('colorizer').setup()
 -- });
 
 -- Transparent background
-vim.g.transparent_enabled = true
+vim.g.transparent_enabled = false
 
-require("transparent").setup({
-    enable = vim.g.transparent_enabled, -- boolean: enable transparent
-})
+-- require("transparent").setup({
+--     enable = vim.g.transparent_enabled, -- boolean: enable transparent
+-- })
 
 --- Catppuccin theme config
 
@@ -474,7 +474,6 @@ require("catppuccin").setup({
         treesitter = true,
         treesitter_context = true,
         ts_rainbow = true,
-        overseer = true,
         illuminate = true,
         neotest = true,
         native_lsp = {

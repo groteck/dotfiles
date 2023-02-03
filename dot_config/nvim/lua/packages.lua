@@ -135,7 +135,7 @@ return require('packer').startup(function(use)
     use { 'stevearc/dressing.nvim' } -- Generl ui improvements
     use { 'rcarriga/nvim-notify' } -- Notifications
     use { 'RRethy/vim-illuminate' } -- Highlight word under cursor
-    use { 'xiyaowong/nvim-transparent' } -- Transparent background
+    -- use { 'xiyaowong/nvim-transparent' } -- Transparent background
 
     -- Hex collors
     use { 'norcalli/nvim-colorizer.lua' }
@@ -153,5 +153,20 @@ return require('packer').startup(function(use)
         "folke/trouble.nvim",
         requires = "nvim-tree/nvim-web-devicons",
     }
+
+    -- Markdown
+    -- use { "iamcco/markdown-preview.nvim",
+    --     run = "cd app && npm install",
+    --     setup = function()
+    --         vim.g.mkdp_filetypes = { "markdown" }
+    --     end,
+    --     ft = { "markdown" },
+    -- }
+    -- install without yarn or npm
+    use({
+        "iamcco/markdown-preview.nvim",
+        run = function() vim.fn["mkdp#util#install"]() end,
+    })
+
 
 end)

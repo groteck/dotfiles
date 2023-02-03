@@ -1,0 +1,9 @@
+rust 1.65.0
+nodejs lts
+python 3.11.0
+golang 1.19.3
+lua 5.4.4
+direnv 2.32.2
+dasel 2.1.1
+terramate 0.2.10
+terraform 1.3.7
