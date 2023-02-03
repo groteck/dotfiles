@@ -67,7 +67,14 @@ window:
   # Values for `decorations` (macOS only):
   #     - transparent: Title bar, transparent background and title bar buttons
   #     - buttonless: Title bar, transparent background and no title bar buttons
+  {{ if eq .chezmoi.os "darwin" }}
   decorations: buttonless
+  {{ else }}
+  # linux
+  decorations: none
+  # other operating system
+  {{ end }}
+
 
   # Background opacity
   #

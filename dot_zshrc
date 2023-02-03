@@ -1,13 +1,21 @@
 # load zgenom
 source "${HOME}/.zgenom/zgenom.zsh"
 
-
-# Config for zsh-autocomplete
-zstyle ':autocomplete:recent-dirs' backend zoxide
-
 # Check for plugin and zgenom updates every 7 days
 # This does not increase the startup time.
 zgenom autoupdate
+
+# create the function directory if it doesn't exist
+if [ ! -d "$HOME/.zsh/function" ]; then
+    mkdir -p "$HOME/.zsh/function"
+fi
+
+export LANG=en_US.UTF-8
+export EDITOR='nvim'
+export GOPATH="$HOME/go"
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+export FPATH="$HOME/.zsh/function:$FPATH"
+export BAT_THEME="Catppuccin-mocha"
 
 # if the init script doesn't exist
 if ! zgenom saved; then
@@ -34,6 +42,8 @@ if ! zgenom saved; then
 EOPLUGINS
 
     zgenom load catppuccin/zsh-syntax-highlighting themes/catppuccin_mocha-zsh-syntax-highlighting.zsh
+    zgenom load ogham/exa completions/zsh/ --completions
+
     # save all to init script
     zgenom save
 
@@ -42,21 +52,21 @@ EOPLUGINS
     zgenom compile $ZDOTDIR
 fi
 
-export LANG=en_US.UTF-8
-export EDITOR='nvim'
-export GOPATH='/Users/jlopez/go'
-export PATH="/Users/jlopez/.local/bin:$PATH"
-export BAT_THEME="Catppuccin-mocha"
-
-alias vzsh="nvim ~/.zshrc"
-alias vtmux="nvim ~/.tmux.conf"
+alias vzsh="chezmoi edit --apply ~/.zshrc"
+alias vtmux="chezmoi edit --apply ~/.tmux.conf"
+alias vv="chezmoi edit --apply ~/.config/nvim/init.vim"
+alias vala="chezmoi edit --apply ~/.config/alacritty/alacritty.yml"
+alias vstar="chezmoi edit --apply ~/.config/starship.toml"
+alias czcd="chezmoi cd"
+alias czup="chezmoi update"
 alias vim="nvim"
+alias reload="source ~/.zshrc"
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/jlopez/.google-cloud-sdk/path.zsh.inc' ]; then . '/Users/jlopez/.google-cloud-sdk/path.zsh.inc'; fi
+if [ -f "$HOME/.google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/.google-cloud-sdk/path.zsh.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/jlopez/.google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/jlopez/.google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f "$HOME/.google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/.google-cloud-sdk/completion.zsh.inc"; fi
 
 # Replace unix cli by rust alternatives
 if type "exa" > /dev/null; then
@@ -64,8 +74,12 @@ if type "exa" > /dev/null; then
     compdef ls=exa
     alias ll"exa --icons --long"
     compdef ll=exa
+    alias la"exa --icons --long -a"
+    compdef ll=exa
     alias tree="exa -T --icons --git-ignore"
     compdef tree=exa
+    alias tra="exa -T --icons --git-ignore -a"
+    compdef tra=exa
 fi
 
 if type "bat" > /dev/null; then
@@ -89,6 +103,11 @@ if type "sd" > /dev/null; then
 fi
 
 if type "procs" > /dev/null; then
+    # zsh completion is created if doesn't exist
+    if [ ! -f ~/.zsh/function/_procs ]; then
+        procs --completion-out zsh > ~/.zsh/function/_procs
+    fi
+
     alias ps="procs"
     compdef ps=procs
 fi
