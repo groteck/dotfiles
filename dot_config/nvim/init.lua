@@ -71,7 +71,7 @@ vim.keymap.set("n", "<M-]>", "<D-]>")
 -- LSP config
 
 local cfg = {
-    toggle_key = '<M-x>', -- toggle signature on and off in insert mode,  e.g. toggle_key = '<M-x>'
+    toggle_key = '<M-x>',          -- toggle signature on and off in insert mode,  e.g. toggle_key = '<M-x>'
 }
 require 'lsp_signature'.setup(cfg) -- no need to specify bufnr if you don't use toggle_key
 local lsp = require('lsp-zero')
@@ -143,10 +143,9 @@ lsp.setup_nvim_cmp({
     }),
     formatting = {
         format = lspkind.cmp_format({
-            mode = 'symbol', -- show only symbol annotations
-            maxwidth = 100, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+            mode = 'symbol',       -- show only symbol annotations
+            maxwidth = 100,        -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
             ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
-
             -- The function below will be called before any actual modifications from lspkind
             -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
             before = function(_, vim_item)
@@ -259,7 +258,6 @@ let g:surround_{char2nr('M')} = "\1S-Open: \1\r\2S-Close: \2"
 
 -- Tmux navigation
 -- Keybindings
---
 require('Navigator').setup({})
 
 vim.keymap.set('n', "<C-h>", '<CMD>NavigatorLeft<CR>')
@@ -272,6 +270,10 @@ vim.keymap.set('n', "<M-h>", '<CMD>vertical resize +5<CR>')
 vim.keymap.set('n', "<M-l>", '<CMD>vertical resize -5<CR>')
 vim.keymap.set('n', "<M-k>", '<CMD>resize +5<CR>')
 vim.keymap.set('n', "<M-j>", '<CMD>resize -5<CR>')
+
+-- Tab navigation
+vim.keymap.set('n', '<TAB>', '<CMD>tabn<CR>')
+vim.keymap.set('n', '<S-TAB>', '<CMD>tabp<CR>')
 
 -- Sart screen on empty buffer Telescope
 vim.api.nvim_create_autocmd({ "VimEnter" }, {
@@ -499,7 +501,7 @@ vim.api.nvim_set_hl(0, "OverseerTaskBorder", colors)
 -- Dim inactive window
 require('tint').setup({
     tint_background_colors = false,
-    tint = -45, -- Darken colors, use a positive value to brighten
+    tint = -45,       -- Darken colors, use a positive value to brighten
     saturation = 0.5, -- Saturation to preserve
     highlight_ignore_patterns = { "WinSeparator", 'NormalNC', 'Normal', 'TabLine', 'TabLineFill', 'TabLineSel', },
 });
