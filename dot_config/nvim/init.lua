@@ -59,18 +59,19 @@ vim.noshowmode = true
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
-
-
 -- Visual remaps
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "J", ":m '>+1< colorsR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+
+-- OSX Option mapping
+vim.keymap.set("n", "<M-]>", "<D-]>")
 
 -- Plugin config
 
 -- LSP config
 
 local cfg = {
-    toggle_key = '<A-x>', -- toggle signature on and off in insert mode,  e.g. toggle_key = '<M-x>'
+    toggle_key = '<M-x>', -- toggle signature on and off in insert mode,  e.g. toggle_key = '<M-x>'
 }
 require 'lsp_signature'.setup(cfg) -- no need to specify bufnr if you don't use toggle_key
 local lsp = require('lsp-zero')
@@ -183,6 +184,9 @@ require('rust-tools').setup({ server = rust_lsp })
 
 -- Copilot
 vim.api.nvim_set_keymap("i", ",/", 'copilot#Accept()', { silent = true, expr = true })
+-- Copilot Alt doesnt work on mac
+vim.api.nvim_set_keymap("i", ",>", '<Plug>(copilot-next)', { silent = true, expr = true })
+
 vim.g.copilot_no_tab_map = true
 vim.g.copilot_assume_mapped = true
 
@@ -203,7 +207,6 @@ vim.keymap.set('n', ',dd', '<cmd>NvimTreeToggle<CR>')
 -- indent lines
 vim.opt.list = true
 vim.opt.listchars:append "space:⋅"
-vim.opt.listchars:append "eol:↴"
 
 require("indent_blankline").setup {
     -- for example, context is off by default, use this to turn it on
@@ -218,26 +221,12 @@ require("indent_blankline").setup {
         "IndentBlanklineIndent5",
         "IndentBlanklineIndent6",
     },
+    buftype_exclude = { "DressingInput" },
+    filetype_exclude = { "DressingInput", "DressingSelect", "OverseerList", "OverseerForm" },
 }
 
 -- Telescope (Fuzzy finder)
 local telescope = require('telescope')
--- Select multiple
-local actions = require("telescope.actions")
-local action_state = require("telescope.actions.state")
-
-local mm = { -- my mappings
-    ["<CR>"] = function(pb)
-        local picker = action_state.get_current_picker(pb)
-        local multi = picker:get_multi_selection()
-        actions.select_default(pb) -- the normal enter behaviour
-        for _, j in pairs(multi) do
-            if j.path ~= nil then -- is it a file -> open it as well:
-                vim.cmd(string.format("%s %s", "edit", j.path))
-            end
-        end
-    end,
-}
 
 -- Telescope keymaps
 vim.keymap.set('n', ',fl', '<cmd>Telescope current_buffer_fuzzy_find theme=get_ivy layout_config={height=0.5}<CR>')
@@ -249,15 +238,11 @@ vim.keymap.set('n', ',fv', '<cmd>Telescope git_files theme=get_ivy layout_config
 vim.keymap.set('n', ',fk', '<cmd>Telescope keymaps theme=get_ivy layout_config={height=0.5}<CR>')
 
 -- Telescope config
-telescope.load_extension('fzf')
+-- telescope.load_extension('fzf')
 
 telescope.setup({
     defaults = {
-        mappings = {
-            i = mm,
-            n = mm,
-        },
-        file_ignore_patterns = { "node_modules", ".git" },
+        file_ignore_patterns = { "node_modules" },
         color_devicons = true,
         set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
     },
@@ -283,27 +268,17 @@ vim.keymap.set('n', "<C-k>", '<CMD>NavigatorUp<CR>')
 vim.keymap.set('n', "<C-j>", '<CMD>NavigatorDown<CR>')
 vim.keymap.set('n', "<C-p>", '<CMD>NavigatorPrevious<CR>')
 
--- Sart screen
--- vim.api.nvim_exec([[
--- fun! Start()
---     " Don't run if: we have commandline arguments, we don't have an empty
---     " buffer, if we've not invoked as vim or gvim, or if we'e start in insert mode
---     if argc() || line2byte('$') != -1 || v:progname !~? '^[-gmnq]\=vim\=x\=\%[\.exe]$' || &insertmode
---         return
---     endif
---
---     " Open explorer
---     execute ':lua require("telescope.builtin").find_files()'
--- endfun
--- ]], false)
--- local startFun = "g:Start"
---
+vim.keymap.set('n', "<M-h>", '<CMD>vertical resize +5<CR>')
+vim.keymap.set('n', "<M-l>", '<CMD>vertical resize -5<CR>')
+vim.keymap.set('n', "<M-k>", '<CMD>resize +5<CR>')
+vim.keymap.set('n', "<M-j>", '<CMD>resize -5<CR>')
+
+-- Sart screen on empty buffer Telescope
 vim.api.nvim_create_autocmd({ "VimEnter" }, {
     pattern = { "*" },
     callback = function()
         if vim.fn.argc() == 0 and vim.fn.line2byte(vim.fn.line('$')) == -1
             and not vim.opt.insertmode:get() then
-
             require("telescope.builtin").find_files()
         end
     end
@@ -415,7 +390,6 @@ require('overseer').setup()
 require("trouble").setup()
 
 -- Vim Ilumuminate
-
 -- default configuration
 require('illuminate').configure({
     providers = {
@@ -435,7 +409,6 @@ vim.t_Co = 256
 vim.opt.syntax = 'enable'
 vim.opt.colorcolumn = '80'
 vim.opt.hlsearch = true
-vim.cmd.colorscheme "catppuccin-mocha"
 vim.opt.termguicolors = true -- set termguicolors to enable highlight groups
 
 
@@ -443,20 +416,8 @@ vim.opt.termguicolors = true -- set termguicolors to enable highlight groups
 require('colorizer').setup()
 
 
--- Dim inactive window
--- require('tint').setup({
---     tint_background_colors = false,
---     tint = -45, -- Darken colors, use a positive value to brighten
---     saturation = 0.5, -- Saturation to preserve
---     highlight_ignore_patterns = { "WinSeparator", 'NormalNC', 'Normal', 'TabLine', 'TabLineFill', 'TabLineSel', },
--- });
-
 -- Transparent background
-vim.g.transparent_enabled = false
-
--- require("transparent").setup({
---     enable = vim.g.transparent_enabled, -- boolean: enable transparent
--- })
+vim.g.transparent_enabled = true
 
 --- Catppuccin theme config
 
@@ -495,6 +456,50 @@ require("catppuccin").setup({
             enabled = true,
             colored_indent_levels = true,
         },
-
     },
 })
+vim.cmd.colorscheme "catppuccin-mocha"
+
+-- base = "#1E1E2E",
+-- blue = "#89B4FA",
+-- crust = "#11111B",
+-- flamingo = "#F2CDCD",
+-- green = "#A6E3A1",
+-- lavender = "#B4BEFE",
+-- mantle = "#181825",
+-- maroon = "#EBA0AC",
+-- mauve = "#CBA6F7",
+-- overlay0 = "#6C7086",
+-- overlay1 = "#7F849C",
+-- overlay2 = "#9399B2",
+-- peach = "#FAB387",
+-- pink = "#F5C2E7",
+-- red = "#F38BA8",
+-- rosewater = "#F5E0DC",
+-- sapphire = "#74C7EC",
+-- sky = "#89DCEB",
+-- subtext0 = "#A6ADC8",
+-- subtext1 = "#BAC2DE",
+-- surface0 = "#313244",
+-- surface1 = "#45475A",
+-- surface2 = "#585B70",
+-- teal = "#94E2D5",
+-- text = "#CDD6F4",
+-- yellow = "#F9E2AF"
+local mocha = require("catppuccin.palettes").get_palette "mocha"
+local colors = { bg = mocha.crust, fg = mocha.text }
+vim.api.nvim_set_hl(0, "NormalFloat", colors)
+vim.api.nvim_set_hl(0, "FloatBorder", colors)
+vim.api.nvim_set_hl(0, "OverseerComponent", colors)
+vim.api.nvim_set_hl(0, "OverseerField", colors)
+vim.api.nvim_set_hl(0, "OverseerTask", colors)
+vim.api.nvim_set_hl(0, "OverseerTaskBorder", colors)
+
+
+-- Dim inactive window
+require('tint').setup({
+    tint_background_colors = false,
+    tint = -45, -- Darken colors, use a positive value to brighten
+    saturation = 0.5, -- Saturation to preserve
+    highlight_ignore_patterns = { "WinSeparator", 'NormalNC', 'Normal', 'TabLine', 'TabLineFill', 'TabLineSel', },
+});

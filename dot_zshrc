@@ -16,6 +16,7 @@ export GOPATH="$HOME/go"
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 export FPATH="$HOME/.zsh/function:$FPATH"
 export BAT_THEME="Catppuccin-mocha"
+export GPG_TTY=$(tty)
 
 # if the init script doesn't exist
 if ! zgenom saved; then
@@ -42,7 +43,7 @@ if ! zgenom saved; then
 EOPLUGINS
 
     zgenom load catppuccin/zsh-syntax-highlighting themes/catppuccin_mocha-zsh-syntax-highlighting.zsh
-    zgenom load ogham/exa completions/zsh/ --completions
+    zgenom load ogham/exa completions/zsh/
 
     # save all to init script
     zgenom save
@@ -72,13 +73,13 @@ if [ -f "$HOME/.google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/.google-cl
 if type "exa" > /dev/null; then
     alias ls="exa --icons -1"
     compdef ls=exa
-    alias ll"exa --icons --long"
+    alias ll="exa --icons --long"
     compdef ll=exa
-    alias la"exa --icons --long -a"
-    compdef ll=exa
+    alias la="exa --icons --long --all"
+    compdef la=exa
     alias tree="exa -T --icons --git-ignore"
     compdef tree=exa
-    alias tra="exa -T --icons --git-ignore -a"
+    alias tra="exa -T --icons --git-ignore --all"
     compdef tra=exa
 fi
 
