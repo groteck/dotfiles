@@ -1,9 +1,12 @@
 [user]
 	name = Fraire-Lopez, Juan-Gabriel
-	email = juan.lopez@solactive.com
 [push]
 	autoSetupRemote = true
 [core]
-	excludesfile = /Users/jlopez/.gitignore
+	excludesfile = ~/.gitignore
 [init]
 	defaultBranch = main
+[includeIf "gitdir:~/personal/"]
+	path = ~/.gitconfig-personal
+[includeIf "gitdir:~/work/"]
+	path = ~/.gitconfig-work
