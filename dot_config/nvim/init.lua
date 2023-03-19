@@ -114,7 +114,7 @@ lsp.configure('pylsp', {
 require('neodev').setup()
 
 -- Enable neodev
-lspconfig.sumneko_lua.setup({
+lspconfig.lua_ls.setup({
     settings = {
         Lua = {
             completion = {

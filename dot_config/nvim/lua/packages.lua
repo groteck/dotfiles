@@ -1,7 +1,6 @@
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
 
 return require('packer').startup(function(use)
-
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
 
@@ -14,11 +13,11 @@ return require('packer').startup(function(use)
         end,
     }
 
-    use 'nvim-treesitter/playground' -- Treesitter playground
+    use 'nvim-treesitter/playground'  -- Treesitter playground
 
     use 'mrjones2014/nvim-ts-rainbow' -- Color pharentesis
 
-    use { -- Context on the top
+    use {                             -- Context on the top
         'nvim-treesitter/nvim-treesitter-context',
         requires = { 'nvim-treesitter/nvim-treesitter' },
     }
@@ -95,7 +94,7 @@ return require('packer').startup(function(use)
         requires = {
             'nvim-tree/nvim-web-devicons', -- optional, for file icons
         },
-        tag = 'nightly' -- optional, updated every week. (see issue #1193)
+        tag = 'nightly'                    -- optional, updated every week. (see issue #1193)
     }
 
     -- Tmux integration
@@ -131,10 +130,10 @@ return require('packer').startup(function(use)
     }
 
     -- Improve UI
-    -- use { 'levouh/tint.nvim' } -- Dim panels
+    use { 'levouh/tint.nvim' }       -- Dim panels
     use { 'stevearc/dressing.nvim' } -- Generl ui improvements
-    use { 'rcarriga/nvim-notify' } -- Notifications
-    use { 'RRethy/vim-illuminate' } -- Highlight word under cursor
+    use { 'rcarriga/nvim-notify' }   -- Notifications
+    use { 'RRethy/vim-illuminate' }  -- Highlight word under cursor
     -- use { 'xiyaowong/nvim-transparent' } -- Transparent background
 
     -- Hex collors
@@ -167,6 +166,4 @@ return require('packer').startup(function(use)
         "iamcco/markdown-preview.nvim",
         run = function() vim.fn["mkdp#util#install"]() end,
     })
-
-
 end)
