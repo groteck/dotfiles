@@ -10,6 +10,6 @@ This are my personal dotfiles using [chezmoi](https://www.chezmoi.io/) to mantai
 
 You need to install the plugin managers after you install this dotfiles:
 
-* nvim -> [packer](https://github.com/wbthomason/packer.nvim#quickstart)
+* nvim -> [lazy.nvim](https://github.com/folke/lazy.nvim#-usage)
 * tmux -> [tpm](https://github.com/tmux-plugins/tpm)
-* zsh -> [ohmyzsh](https://github.com/ohmyzsh/ohmyzsh)
+* zsh -> [zgenom](https://github.com/jandamm/zgenom#installation)
