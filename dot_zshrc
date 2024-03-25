@@ -13,7 +13,7 @@ fi
 export LANG=en_US.UTF-8
 export EDITOR='nvim'
 export GOPATH="$HOME/go"
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/go/bin:$PATH"
 export FPATH="$HOME/.zsh/function:$FPATH"
 export BAT_THEME="Catppuccin-mocha"
 export GPG_TTY=$(tty)
@@ -62,6 +62,7 @@ alias czcd="chezmoi cd"
 alias czup="chezmoi update"
 alias vim="nvim"
 alias reload="source ~/.zshrc"
+alias nnvim="NVIM_APPNAME=nvim-kickstart nvim"
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f "$HOME/.google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/.google-cloud-sdk/path.zsh.inc"; fi
